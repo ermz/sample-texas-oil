@@ -12,20 +12,27 @@ contract BolToken is ERC20, ERC20PresetMinterPauser {
 		_mint(msg.sender, 10000);
 	}
 
+	//Checks that no more than 1000
+	modifier auditorRestrictions(address auditor, uint amount) {
+		require(amount <= 1000);
+		require(balanceOf(auditor) < 100);
+		_;
+	}
+
 	//Grant permission to specific address, most likely a 
-	function grantPermission(address minter) onlyOwner {
-		_setupRole(MINTER_ROLE, minter);
+	function grantPermission(address minter) onlyOwner() {
+		setupRole(MINTER_ROLE, minter);
 	}
 
 	//In order to mint you must be a minter or contract deployer
-	function mint(address to, uint256 amount) public {
+	function mint(address to, uint256 amount) public auditorRestrictions(msg.sender, amount) {
 		require(hasRole(MINTER_ROLE, msg.sender), "Must be a minter");
 		_mint(to, amount);
 	}
 
-
-
-	//Give permission to certain field workers who need to check on drivers and may can grant them bol tokens
-	//Limit their availability to mint, based on time or how much tokens they have. Create additional modifiers
+	//Can only be called by current owner
+	function transferOwnership(address newOwner) public {
+		transferOwnership(newOwner);
+	}
 
 }
