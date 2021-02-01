@@ -38,9 +38,12 @@ contract DBol is ERC721PresetMinterPauserAutoId, IERC721 {
 	mapping(uint256 => uint256) NFTownsFT;
 	mapping(uint256 => mapping(address => uint256)) balanceOfFungibleToken;
 
-	function tokenFallback(address from, uint256 value, bytes calldata _data) external {
-		//Look at IERC998ERC20TopDown before continuing
-		//Make sense of code first
+	//A token recives ERC20 tokens, In this case it would be the msg.sender. So new owner is the one calling tokenFallback
+	//params@from is the owner of the previous ERC20 tokens
+	//params@value amount of tokens of being sent
+	//params@data up to the first 32 bytes contains an integer which is the receiving tokenId
+	function tokenFallback(address from, uint256 value, bytes calldata data) external {
+		
 	}
 
 	function balanceOfERC20(uint256 tokenId, address erc20Contract) external view returns (uint256) {
